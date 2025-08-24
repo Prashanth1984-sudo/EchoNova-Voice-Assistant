@@ -20,18 +20,7 @@ An **AI-powered Voice Assistant** built in Python that understands **natural Eng
 | Tell Time & Date | Current time/date information | ⏰ |
 | Custom Commands | Add your own commands | 🛠️ |
 
----
 
-## 🎬 Demo
-
-<details>
-<summary>Click to view demo</summary>
-
-![Voice Assistant Demo](assets/demo.gif)  
-
-Or watch on [YouTube](https://www.youtube.com/).  
-
-</details>
 
 ---
 
