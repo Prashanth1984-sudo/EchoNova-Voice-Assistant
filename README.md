@@ -1,6 +1,6 @@
 # 🎙️ Voice Assistant
 
-![Voice Assistant Banner](assets/banner.png)  
+![Voice Assistant Banner](https://miro.medium.com/0*fSSNyz3x0x2_QvTA)  
 
 [![Python Version](https://img.shields.io/badge/python-3.12-blue?logo=python)](https://www.python.org/) 
 [![GitHub stars](https://img.shields.io/github/stars/yPrashanth1984-sudo/voice-assistant?style=social)](https://github.com/yPrashanth1984-sudo/voice-assistant/stargazers)
