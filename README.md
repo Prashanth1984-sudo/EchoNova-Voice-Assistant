@@ -40,7 +40,23 @@ Or watch on [YouTube](https://www.youtube.com/).
 <details>
 <summary>Click to expand installation steps</summary>
 
-1. **Clone the repository**
+1. **Install dependencies**
 ```bash
-git clone https://github.com/yPrashanth1984-sudo/voice-assistant.git
-cd voice-assistant
+pip install -r requirements.txt
+2.Download Vosk model
+Place it in the models/ directory:
+
+# Example: small English model
+# https://alphacephei.com/vosk/models
+
+
+3.Verify models directory
+Ensure your models/ folder contains the downloaded Vosk model files. For example:
+
+models/
+└─ vosk-model-small-en-us-0.15/
+
+
+4.Run the assistant
+
+python main.py
