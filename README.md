@@ -3,7 +3,7 @@
 ![Voice Assistant Banner](assets/banner.png)  
 
 [![Python Version](https://img.shields.io/badge/python-3.12-blue?logo=python)](https://www.python.org/) 
-[![GitHub stars](https://img.shields.io/github/stars/your-username/voice-assistant?style=social)](https://github.com/yPrashanth1984-sudo/voice-assistant/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/yPrashanth1984-sudo/voice-assistant?style=social)](https://github.com/yPrashanth1984-sudo/voice-assistant/stargazers)
 
 An **AI-powered Voice Assistant** built in Python that understands **natural English commands** and helps you automate tasks with voice.  
 
@@ -30,6 +30,7 @@ An **AI-powered Voice Assistant** built in Python that understands **natural Eng
 ![Voice Assistant Demo](assets/demo.gif)  
 
 Or watch on [YouTube](https://www.youtube.com/).  
+
 </details>
 
 ---
@@ -39,7 +40,7 @@ Or watch on [YouTube](https://www.youtube.com/).
 <details>
 <summary>Click to expand installation steps</summary>
 
-1. **Clone the repo**
+1. **Clone the repository**
 ```bash
-git clone https://github.com/your-username/voice-assistant.git
+git clone https://github.com/yPrashanth1984-sudo/voice-assistant.git
 cd voice-assistant
