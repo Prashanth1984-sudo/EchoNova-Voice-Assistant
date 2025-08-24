@@ -1,0 +1,17 @@
+{
+  "wake_word": "jarvis",
+  "stt_device_index": null,
+  "stt_sample_rate": 16000,
+  "push_to_talk_key": "enter",
+  "open_sites": {
+    "youtube": "https://www.youtube.com",
+    "google": "https://www.google.com",
+    "github": "https://github.com",
+    "stackoverflow": "https://stackoverflow.com",
+    "whatsapp": "https://web.whatsapp.com"
+  },
+  "stt_model_path": "models/vosk-model-small-en-us-0.15",
+  "voice": "auto",
+  "rate_wpm": 185,
+  "volume": 0.9
+}

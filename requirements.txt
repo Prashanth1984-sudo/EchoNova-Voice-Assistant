@@ -1,0 +1,12 @@
+vosk
+sounddevice
+pyttsx3
+wikipedia
+requests
+psutil
+pywin32; platform_system=="Windows"
+pyttsx3~=2.90
+wikipedia~=1.4.0
+PyAutoGUI~=0.9.54
+SpeechRecognition~=3.10.4
+pyjokes==0.6.0
