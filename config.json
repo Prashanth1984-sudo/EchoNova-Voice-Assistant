@@ -1,17 +1,15 @@
 {
-  "wake_word": "jarvis",
-  "stt_device_index": null,
-  "stt_sample_rate": 16000,
-  "push_to_talk_key": "enter",
-  "open_sites": {
-    "youtube": "https://www.youtube.com",
-    "google": "https://www.google.com",
-    "github": "https://github.com",
-    "stackoverflow": "https://stackoverflow.com",
-    "whatsapp": "https://web.whatsapp.com"
-  },
-  "stt_model_path": "models/vosk-model-small-en-us-0.15",
+  "wake_phrases": ["hey jarvis", "ok jarvis", "hello jarvis", "jarvis"],
+  "sleep_phrases": ["ok jarvis take rest", "go to sleep jarvis", "sleep jarvis", "stop listening"],
+  "listen_seconds": 6,
+  "confirm_beep": false,
   "voice": "auto",
-  "rate_wpm": 185,
-  "volume": 0.9
+  "rate_wpm": 170,
+  "volume": 1.0,
+  "apps": {
+    "notepad": "notepad.exe",
+    "calculator": "calc.exe",
+    "chrome": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "vscode": "C:\\Users\\prash\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+  }
 }

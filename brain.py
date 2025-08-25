@@ -1,66 +1,38 @@
-import re
-from utils import now_time, today_date
-from skills.system import open_app, system_info
-from skills.web import handle_web
-from skills.info import wiki_summary
-from skills.mathskill import handle_math
+import os
+import webbrowser
+import datetime
+from tts import speak
 
-class Brain:
-    def __init__(self, config: dict, say_cb):
-        self.cfg = config
-        self.say = say_cb
-        self.wake = config.get("wake_word", "jarvis").lower()
+def handle_command(command: str):
+    command = command.lower()
 
-    def is_wake(self, text: str) -> bool:
-        return self.wake in text.lower().split()
+    if "open calculator" in command:
+        speak("Opening Calculator")
+        os.system("calc.exe")
 
-    def handle(self, text: str) -> str:
-        t = text.lower().strip()
+    elif "open notepad" in command:
+        speak("Opening Notepad")
+        os.system("notepad.exe")
 
-        # small talk / control
-        if t in ("quit", "exit", "stop", "shutdown"):
-            self.say("Goodbye.")
-            raise SystemExit
-        if any(g in t for g in ["hello", "hi", "hey"]):
-            return "Hello! How can I help?"
-        if "thank" in t:
-            return "Anytime."
+    elif "open youtube" in command:
+        speak("Opening YouTube")
+        webbrowser.open("https://youtube.com")
 
-        # time & date
-        if "time" in t:
-            return f"It's {now_time()}."
-        if "date" in t or "day" in t:
-            return f"Today is {today_date()}."
+    elif "open browser" in command:
+        speak("Opening your default browser")
+        webbrowser.open("https://www.google.com")
 
-        # system info
-        if "battery" in t:
-            return system_info("battery")
+    elif "time" in command:
+        now = datetime.datetime.now().strftime("%I:%M %p")
+        speak(f"The time is {now}")
 
-        # open app
-        m = re.match(r"^open\s+([a-z0-9\.\- ]+)$", t)
-        if m:
-            return open_app(m.group(1))
+    elif "date" in command:
+        today = datetime.datetime.now().strftime("%A, %B %d, %Y")
+        speak(f"Today is {today}")
 
-        # web / sites / search
-        web_ans = handle_web(t, self.cfg.get("open_sites", {}))
-        if web_ans:
-            return web_ans
+    elif "take rest" in command or "shutdown" in command:
+        speak("Okay sir, shutting down. Have a nice day!")
+        exit()
 
-        # math
-        math_ans = handle_math(t)
-        if math_ans:
-            return math_ans
-
-        # wikipedia if prefixed
-        if t.startswith(("who is", "what is", "tell me about")):
-            q = re.sub(r"^(who is|what is|tell me about)\s+", "", t).strip()
-            if q:
-                return wiki_summary(q)
-
-        # fallback: try Wikipedia quick
-        if len(t.split()) <= 8:
-            maybe = wiki_summary(t, sentences=1)
-            if "couldn't find" not in maybe.lower() and "unavailable" not in maybe.lower():
-                return maybe
-
-        return "I didn't catch that. Try 'open notepad', 'search for data science', 'what is neural network', or 'calculate 12*(5+3)'."
+    else:
+        speak("Sorry, I didn't understand that command.")

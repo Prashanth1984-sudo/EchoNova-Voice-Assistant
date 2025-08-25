@@ -1,14 +1,28 @@
-import re
-from utils import safe_eval_math
+def execute(command: str) -> str:
+    command = command.lower()
 
-MATH_PAT = re.compile(r"^(calculate|calc|what is)\s+(.+)$")
-
-def handle_math(intent: str):
-    m = MATH_PAT.match(intent)
-    if not m: return ""
-    expr = m.group(2).strip().replace("x", "*")
     try:
-        val = safe_eval_math(expr)
-        return f"The result is {val}."
+        if "plus" in command:
+            nums = [int(s) for s in command.split() if s.isdigit()]
+            return f"Result is {sum(nums)}"
+
+        elif "minus" in command:
+            nums = [int(s) for s in command.split() if s.isdigit()]
+            return f"Result is {nums[0] - nums[1]}"
+
+        elif "multiply" in command:
+            nums = [int(s) for s in command.split() if s.isdigit()]
+            return f"Result is {nums[0] * nums[1]}"
+
+        elif "divide" in command:
+            nums = [int(s) for s in command.split() if s.isdigit()]
+            return f"Result is {nums[0] / nums[1]}"
+
+        elif "calculate" in command:
+            expr = command.replace("calculate", "").strip()
+            return f"Result is {eval(expr)}"
+
     except Exception:
-        return "I couldn't compute that safely."
+        return "Sorry, I couldn’t calculate that."
+
+    return "Math command not recognized."

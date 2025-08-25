@@ -1,72 +1,49 @@
 import sounddevice as sd
 import numpy as np
-import json
-from vosk import Model, KaldiRecognizer
-from scipy.signal import resample
+import queue
+import speech_recognition as sr
 
 class Recognizer:
-    def __init__(self, model_path="models/vosk-model-small-en-us-0.15"):
-        self.model = Model(model_path)
-        self.recognizer = None
-        self.channels = 1  # default mono
+    def __init__(self, device_index=None, samplerate=44100):
+        self.device_index = device_index
+        self.samplerate = samplerate
+        self.recognizer = sr.Recognizer()
+        self.audio_queue = queue.Queue()
 
-        # Select microphone automatically
-        self.device_index, self.samplerate, self.channels = self.get_input_device()
-
-        # Initialize recognizer
-        self.recognizer = KaldiRecognizer(self.model, 16000)  # always use 16kHz for Vosk
-
-    def get_input_device(self):
-        print("Available audio input devices:")
-        for idx, device in enumerate(sd.query_devices()):
-            if device['max_input_channels'] > 0:
-                print(f"[{idx}] {device['name']} - Input channels: {device['max_input_channels']}")
-        # Select first real microphone containing "Microphone"
-        for idx, device in enumerate(sd.query_devices()):
-            if device['max_input_channels'] > 0 and "Microphone" in device['name']:
-                samplerate = int(device['default_samplerate'])
-                channels = device['max_input_channels']
-                print(f"Auto-selected microphone: [{idx}] {device['name']} with {channels} channels")
-                return idx, samplerate, channels
-        raise RuntimeError("No valid microphone found.")
+    def _callback(self, indata, frames, time, status):
+        """Internal callback for sounddevice."""
+        if status:
+            print(f"Audio status: {status}")
+        self.audio_queue.put(indata.copy())
 
     def listen(self, duration=5):
-        print(f"Listening on device {self.device_index}, channels {self.channels}, samplerate {self.samplerate}")
+        """Listen from the microphone and return recognized text."""
         try:
-            recording = sd.rec(
-                int(duration * self.samplerate),
-                samplerate=self.samplerate,
-                channels=self.channels,
-                dtype='int16',
-                device=self.device_index
-            )
-            sd.wait()
-            print(f"Recording shape: {recording.shape}")
+            print(f"Listening on device {self.device_index}, samplerate {self.samplerate}...")
+            with sd.InputStream(samplerate=self.samplerate,
+                                channels=1,
+                                device=self.device_index,
+                                callback=self._callback):
+                frames = []
+                for _ in range(int(self.samplerate / 1024 * duration)):
+                    data = self.audio_queue.get()
+                    frames.append(data)
 
-            # Convert to mono if stereo
-            if recording.shape[1] > 1:
-                recording = np.mean(recording, axis=1).astype(np.int16)
-                print(f"Converted to mono shape: {recording.shape}")
+                audio_data = np.concatenate(frames, axis=0)
+                audio_bytes = (audio_data * 32767).astype(np.int16).tobytes()
 
-            # Resample to 16kHz for Vosk
-            if self.samplerate != 16000:
-                number_of_samples = round(len(recording) * 16000 / self.samplerate)
-                recording = resample(recording, number_of_samples).astype(np.int16)
-                print(f"Resampled to 16kHz, shape: {recording.shape}")
+                audio = sr.AudioData(audio_bytes, self.samplerate, 2)
 
+                try:
+                    text = self.recognizer.recognize_google(audio)
+                    print(f"Detected text: {text}")
+                    return text
+                except sr.UnknownValueError:
+                    print("Jarvis: I didn't catch that.")
+                    return ""
+                except sr.RequestError as e:
+                    print(f"Speech Recognition API error: {e}")
+                    return ""
         except Exception as e:
             print(f"Microphone error: {e}")
             return ""
-
-        # Vosk recognition
-        if self.recognizer.AcceptWaveform(recording.tobytes()):
-            result = json.loads(self.recognizer.Result())
-            text = result.get("text", "")
-            if not text.strip():
-                print("I heard nothing.")
-            else:
-                print(f"Raw heard text: {text}")
-            return text
-        else:
-            partial = json.loads(self.recognizer.PartialResult())
-            return partial.get("partial", "")
